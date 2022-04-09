@@ -1,0 +1,36 @@
+.modal-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container-modal-content {
+    width: 30rem;
+    padding: .9rem 0;
+    border-radius: 1rem;
+    cursor: auto;
+    background: #1a1a1a;
+    border: 3px solid lightblue;
+}
+
+.container-modal-content form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container-form-group {
+    width: 20rem;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: .6rem;
+}
+
+.container-image-upload {
+    width: 20rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: .3rem;
+    margin-bottom: .6rem;
+}
