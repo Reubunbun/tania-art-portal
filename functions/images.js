@@ -55,18 +55,10 @@ async function create(objRequest, daoPortfolioImages) {
     } = JSON.parse(objRequest.body);
 
     const arrTags = strTags ? strTags.split(', ') : null;
-    if (arrTags) {
-        try {
-            await daoPortfolioImages.refreshTags(arrTags);
-        } catch (e) {
-            console.log(e);
-            throw e;
-        }
-    }
 
     let objResult;
     try {
-         objResult = await daoPortfolioImages.create(
+         objResult = await daoPortfolioImages.createNEW(
             strTitle,
             strDescription,
             arrTags,
@@ -103,18 +95,18 @@ async function update(objRequest, daoPortfolioImages, intImageId) {
         Tags: strTags,
     } = JSON.parse(objRequest.body);
 
-    const arrTags = strTags ? strTags.split(', ') : null;
-    if (arrTags) {
-        await daoPortfolioImages.refreshTags(arrTags);
+    const arrTags = strTags === undefined ? null : strTags.split(', ');
+    try {
+        await daoPortfolioImages.updateNEW(
+            intImageId,
+            intPrio,
+            strTitle,
+            strDescription,
+            arrTags,
+        );
+    } catch (err) {
+        console.log(err);
     }
-
-    await daoPortfolioImages.update(
-        intImageId,
-        intPrio,
-        strTitle,
-        strDescription,
-        arrTags,
-    );
 
     return {
         statusCode: 200,
@@ -123,7 +115,7 @@ async function update(objRequest, daoPortfolioImages, intImageId) {
 }
 
 async function deleteId(objRequest, daoPortfolioImages, intImageId) {
-    await daoPortfolioImages.deleteById(intImageId);
+    await daoPortfolioImages.deleteNEW(intImageId);
 
     return {
         statusCode: 200,
