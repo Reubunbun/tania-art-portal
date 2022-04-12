@@ -52,6 +52,8 @@ async function create(objRequest, daoPortfolioImages) {
         Description: strDescription,
         Tags: strTags,
         URL: strImageUrl,
+        Width: intWidth,
+        Height: intHeight,
     } = JSON.parse(objRequest.body);
 
     const arrTags = strTags ? strTags.split(', ') : null;
@@ -63,6 +65,8 @@ async function create(objRequest, daoPortfolioImages) {
             strDescription,
             arrTags,
             strImageUrl,
+            intWidth,
+            intHeight,
         );
     } catch (e) {
         console.log(e);

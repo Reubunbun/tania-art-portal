@@ -13,6 +13,8 @@ module.exports = class PortfolioImages {
     static COL_DESCRIPTION = 'description';
     static COL_TAGS = 'tags';
     static COL_PRIO = 'priority';
+    static COL_WIDTH = 'width';
+    static COL_HEIGHT = 'height';
 
     static TAG_TABLE_NAME = 'tania_portfolio_tags';
     static COL_TAG_NAME = 'tag_name';
@@ -176,11 +178,13 @@ module.exports = class PortfolioImages {
         };
     }
 
-    async createNEW(strTitle, strDescription, arrTags, strImageUrl) {
+    async createNEW(strTitle, strDescription, arrTags, strImageUrl, intWidth, intHeight) {
         const objInsert = {
             [PortfolioImages.COL_TITLE]: strTitle,
             [PortfolioImages.COL_DESCRIPTION]: strDescription,
             [PortfolioImages.COL_URL]: strImageUrl,
+            [PortfolioImages.COL_WIDTH]: intWidth,
+            [PortfolioImages.COL_HEIGHT]: intHeight,
             [PortfolioImages.COL_TAGS]: 0,
         };
 

@@ -29,25 +29,31 @@ export default function CreateImage({
       })
         .then(({data}) => {
           const strUrl = `https://tania-portfolio.s3.eu-west-1.amazonaws.com/${data.FileName}`;
-          axios({
-            url: '/api/images',
-            method: 'POST',
-            data: {
-              Title: strTitle,
-              Description: strDescription,
-              Tags: strTags,
-              URL: strUrl,
-            },
-          })
-            .then(({data}) => callbackAddImage({
-              Title: strTitle,
-              Tags: strTags,
-              Description: strDescription,
-              URL: strUrl,
-              Id: data.Id,
-              Priority: data.Prio,
-            }))
-            .catch(console.dir);
+          const img = new Image();
+          img.src = strUrl;
+          img.onload = function() {
+            axios({
+              url: '/api/images',
+              method: 'POST',
+              data: {
+                Title: strTitle,
+                Description: strDescription,
+                Tags: strTags,
+                URL: strUrl,
+                Width: this.width,
+                Height: this.height,
+              },
+            })
+              .then(({data}) => callbackAddImage({
+                Title: strTitle,
+                Tags: strTags,
+                Description: strDescription,
+                URL: strUrl,
+                Id: data.Id,
+                Priority: data.Prio,
+              }))
+              .catch(console.dir);
+          };
         })
         .catch(console.dir);
     });
