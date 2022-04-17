@@ -3,7 +3,7 @@ const auth = require('./service/auth.js');
 const DaoCommSpaces = require('./dao/CommSpaces.js');
 
 module.exports.handler = async function(objRequest) {
-    const {Status, Response} = auth(objRequest);
+    const {Status, Response} = await auth(objRequest);
 
     if (Status === auth.STATUS_FAILED) {
         return Response;
@@ -21,7 +21,13 @@ module.exports.handler = async function(objRequest) {
     try {
         switch (objRequest.httpMethod) {
             case 'GET': {
-                const intSpaces = await daoCommSpaces.getSpaces();
+                let intSpaces;
+                try {
+                    intSpaces = await daoCommSpaces.getSpaces();
+                } catch (e) {
+                    console.log(e);
+                    throw e;
+                }
                 return {
                     statusCode: 200,
                     body: JSON.stringify({

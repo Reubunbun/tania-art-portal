@@ -41,7 +41,7 @@ module.exports = async function (objRequest) {
                 'Cache-Control': 'no-cache',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({message: 'Logged In'})
+            body: JSON.stringify({message: 'Unauthorized'})
         },
     };
 };

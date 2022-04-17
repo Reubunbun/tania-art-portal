@@ -20,6 +20,10 @@ module.exports = class CommSpaces {
                 .toString(),
         );
 
+        if (!arrResult.length) {
+            return 0;
+        }
+
         return arrResult[0][CommSpaces.COL_NUM_SPACES];
     }
 

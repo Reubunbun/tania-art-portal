@@ -1,9 +1,12 @@
 const sql = require('mysql');
 const auth = require('./service/auth.js');
 const DaoPortfolioImages = require('./dao/PortfolioImages.js');
+const DaoPortfolioTags = require('./dao/PortfolioTags.js');
 
 module.exports.handler = async function(objRequest) {
-    const {Status, Response} = auth(objRequest);
+    const {Status, Response} = await auth(objRequest);
+    console.log('finished auth');
+    console.log('status: ', Status);
 
     if (Status === auth.STATUS_FAILED) {
         return Response;
@@ -17,6 +20,7 @@ module.exports.handler = async function(objRequest) {
         port: process.env.DB_PORT,
     });
     const daoPortfolioImages = new DaoPortfolioImages(connSQL);
+    const daoPortfolioTags = new DaoPortfolioTags(connSQL);
 
     try {
         switch (objRequest.httpMethod) {
@@ -24,11 +28,20 @@ module.exports.handler = async function(objRequest) {
                 return await getAll(objRequest, daoPortfolioImages);
             }
             case 'POST': {
-                return await create(objRequest, daoPortfolioImages);
+                return await create(
+                    objRequest,
+                    daoPortfolioImages,
+                    daoPortfolioTags,
+                );
             }
             case 'PUT': {
                 const intImageId = objRequest.path.split('/').pop();
-                return await update(objRequest, daoPortfolioImages, intImageId);
+                return await update(
+                    objRequest,
+                    intImageId,
+                    daoPortfolioImages,
+                    daoPortfolioTags,
+                );
             }
             case 'DELETE': {
                 const intImageId = objRequest.path.split('/').pop();
@@ -46,7 +59,7 @@ module.exports.handler = async function(objRequest) {
     }
 };
 
-async function create(objRequest, daoPortfolioImages) {
+async function create(objRequest, daoPortfolioImages, daoPortfolioTags) {
     const {
         Title: strTitle,
         Description: strDescription,
@@ -60,14 +73,37 @@ async function create(objRequest, daoPortfolioImages) {
 
     let objResult;
     try {
-         objResult = await daoPortfolioImages.createNEW(
+         objResult = await daoPortfolioImages.create(
             strTitle,
             strDescription,
-            arrTags,
             strImageUrl,
             intWidth,
             intHeight,
         );
+    } catch (e) {
+        console.log(e);
+        throw e;
+    }
+
+    if (arrTags) {
+        try {
+            await daoPortfolioTags.createTags(objResult.Id, arrTags);
+        } catch (e) {
+            console.log(e);
+            throw e;
+        }
+    }
+
+    return {
+        statusCode: 200,
+        body: JSON.stringify(objResult),
+    };
+}
+
+async function getAll(objRequest, daoPortfolioImages) {
+    let objResult;
+    try {
+        objResult = await daoPortfolioImages.getAll();
     } catch (e) {
         console.log(e);
         throw e;
@@ -79,19 +115,7 @@ async function create(objRequest, daoPortfolioImages) {
     };
 }
 
-async function getAll(objRequest, daoPortfolioImages) {
-    const intPage = objRequest.queryStringParameters.page || 0;
-
-    const objTagFlags = await daoPortfolioImages.getTags();
-    const objResult = await daoPortfolioImages.getAll(intPage, objTagFlags);
-
-    return {
-        statusCode: 200,
-        body: JSON.stringify(objResult),
-    };
-}
-
-async function update(objRequest, daoPortfolioImages, intImageId) {
+async function update(objRequest, intImageId, daoPortfolioImages, daoPortfolioTags) {
     const {
         Prio: intPrio,
         Title: strTitle,
@@ -101,15 +125,23 @@ async function update(objRequest, daoPortfolioImages, intImageId) {
 
     const arrTags = strTags === undefined ? null : strTags.split(', ');
     try {
-        await daoPortfolioImages.updateNEW(
+        await daoPortfolioImages.update(
             intImageId,
             intPrio,
             strTitle,
             strDescription,
-            arrTags,
         );
     } catch (err) {
         console.log(err);
+    }
+
+    if (arrTags) {
+        try {
+            await daoPortfolioTags.updateTags(intImageId, arrTags);
+        } catch (e) {
+            console.log(e);
+            throw e;
+        }
     }
 
     return {
@@ -119,7 +151,7 @@ async function update(objRequest, daoPortfolioImages, intImageId) {
 }
 
 async function deleteId(objRequest, daoPortfolioImages, intImageId) {
-    await daoPortfolioImages.deleteNEW(intImageId);
+    await daoPortfolioImages.delete(intImageId);
 
     return {
         statusCode: 200,

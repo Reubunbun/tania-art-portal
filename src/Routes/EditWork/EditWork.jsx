@@ -12,6 +12,7 @@ export default function EditWork() {
   const [bCreatingImage, setCreatingImage] = useState(false);
   const [bUpdatingSpaces, setUpdatingSpaces] = useState(false);
   const objUniqueImages = useRef({});
+  const initLoad = useRef(true);
 
   useEffect(() => {
     axios({
@@ -20,7 +21,7 @@ export default function EditWork() {
     })
       .then(({data}) => {
         const arrToAdd = [];
-        for (const objImg of data.Images) {
+        for (const objImg of data) {
           if (objImg.Id in objUniqueImages.current) {
             continue;
           }
@@ -49,15 +50,25 @@ export default function EditWork() {
   }, []);
 
   useEffect(() => {
+    if (initLoad.current) {
+      console.log('init load');
+      initLoad.current = false;
+      return;
+    }
+
+    console.log('images array changed');
+
     const arrImagesToUpdate = [];
     for (let i = 0; i < arrImages.length; i++) {
       const objImage = arrImages[i];
       const intNewPrioMob = i + 1;
       const intNewPrio = Math.ceil(intNewPrioMob / 5);
       if (intNewPrio !== objImage.PriorityOther) {
+        console.log('prio other has changed');
         objImage.PriorityOther = intNewPrio;
       }
       if (intNewPrioMob !== objImage.Priority) {
+        console.log('prio has changed');
         objImage.Priority = intNewPrioMob;
         arrImagesToUpdate.push(objImage);
       }
