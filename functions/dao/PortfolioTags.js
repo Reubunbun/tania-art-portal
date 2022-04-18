@@ -24,7 +24,11 @@ module.exports = class PortfolioTags {
     }
 
     async createTags(intImgId, arrTags) {
-        const arrInserts = arrTags.map(strTag => ({
+        const arrCleanTags = arrTags
+            .map(tag => tag.trim())
+            .filter(tag => tag);
+
+        const arrInserts = arrCleanTags.map(strTag => ({
             [PortfolioTags.COL_IMG_ID]: intImgId,
             [PortfolioTags.COL_TAG_NAME]: strTag,
         }));
