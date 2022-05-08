@@ -4,6 +4,13 @@
     align-items: center;
     flex-direction: column;
 }
+.page-container h1 {
+    margin-bottom: .5rem;
+}
+.page-container a {
+    margin-bottom: 1rem;
+}
+
 .btn-modal {
     background-color: silver;
     margin-right: .5rem;

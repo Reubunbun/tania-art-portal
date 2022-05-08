@@ -2,12 +2,13 @@ import { Switch, Route, Redirect, useLocation } from 'react-router-dom';
 import cookie from 'cookie';
 import Login from './Routes/Login/Login.jsx';
 import EditWork from './Routes/EditWork/EditWork.jsx';
+import EditCommissionOptions from './Routes/EditCommissionOptions/EditCommissionOptions.jsx';
 import Authorize from './Components/Authorize/Authorize.jsx';
 import './App.css';
 
 const c_arrAuthorizedPaths = [
   '/editwork',
-  '/editcommission',
+  '/editcommissionoptions'
 ];
 
 function App() {
@@ -27,6 +28,11 @@ function App() {
       <Route path='/editwork'>
         <Authorize>
           <EditWork />
+        </Authorize>
+      </Route>
+      <Route path='/editcommissionoptions'>
+        <Authorize>
+          <EditCommissionOptions />
         </Authorize>
       </Route>
       <Route path='/login'>

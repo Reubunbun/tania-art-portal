@@ -1,5 +1,6 @@
 import { useState, useEffect, Fragment, useRef } from 'react';
 import { Reorder } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import CreateImage from '../../Components/CreateImage/CreateImage.jsx';
 import UpdateSpaces from '../../Components/UpdateSpaces/UpdateSpaces.jsx';
@@ -89,6 +90,7 @@ export default function EditWork() {
   return (
     <div className='page-container'>
       <h1>Make Changes To Tania Art Site</h1>
+      <Link to='/editcommissionoptions'>Go To Commission Options</Link>
       <div>
         <button
           className='btn-modal'
@@ -140,7 +142,7 @@ export default function EditWork() {
                   }}
                   callbackDelete={intId => {
                     axios({
-                      url: `api/images/${intId}`,
+                      url: `/api/images/${intId}`,
                       method: 'DELETE',
                     }).catch(console.dir);
 

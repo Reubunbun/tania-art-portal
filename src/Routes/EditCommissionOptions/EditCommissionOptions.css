@@ -1,0 +1,9 @@
+.container-tables {
+    display: flex;
+    gap: 4rem;
+    margin-top: 1rem;
+}
+
+.container-tables h2 {
+    text-align: center;
+}
