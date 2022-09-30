@@ -73,7 +73,7 @@ async function create(objRequest, daoPortfolioImages, daoPortfolioTags) {
 
     let objResult;
     try {
-         objResult = await daoPortfolioImages.create(
+        objResult = await daoPortfolioImages.create(
             strTitle,
             strDescription,
             strImageUrl,

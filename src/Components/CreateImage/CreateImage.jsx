@@ -109,7 +109,7 @@ export default function CreateImage({
                     refFileUpload.current?.click();
                 }}
               >
-                Upload Image
+                Upload Image - Dont forget to compress first! (https://compressor.io/)
               </button>
               {objImgFile &&
                 <b>{objImgFile.name}</b>

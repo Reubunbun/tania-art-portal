@@ -122,7 +122,7 @@ export default function CreateCommissionOption({
                     refFileUpload.current?.click();
                 }}
               >
-                Upload Example Image
+                Upload Example Image - Dont forget to compress first! (https://compressor.io/)
               </button>
               {objImgFile &&
                 <b>{objImgFile.name}</b>
