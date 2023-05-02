@@ -11,9 +11,9 @@ module.exports = class PortfolioTypes {
 
     constructor(connSQL, type) {
         if (type === 'base') {
-            this._tableName = 'tania_portfolio_comm_types';
+            this._tableName = 'tania_comm_types';
         } else if (type === 'bg') {
-            this._tableName = 'tania_portfolio_comm_bgs';
+            this._tableName = 'tania_comm_bgs';
         } else {
             throw new Error('Invalid or missing type');
         }

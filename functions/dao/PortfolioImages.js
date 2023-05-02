@@ -5,7 +5,7 @@ const knex = require('knex')({
 const DaoPortfolioTags = require('./PortfolioTags.js');
 
 module.exports = class PortfolioImages {
-    static TABLE_NAME = 'tania_portfolio_images';
+    static TABLE_NAME = 'tania_images';
 
     static COL_IMAGE_ID = 'image_id';
     static COL_KEY = 'key';

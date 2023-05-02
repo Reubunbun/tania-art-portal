@@ -4,7 +4,7 @@ const knex = require('knex')({
 });
 
 module.exports = class CommSpaces {
-    static TABLE_NAME = 'tania_portfolio_comm_spaces';
+    static TABLE_NAME = 'tania_comm_spaces';
 
     static COL_NUM_SPACES = 'num_spaces';
 

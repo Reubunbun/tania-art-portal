@@ -4,7 +4,7 @@ const knex = require('knex')({
 });
 
 module.exports = class PortfolioTags {
-    static TABLE_NAME = 'tania_portfolio_tags';
+    static TABLE_NAME = 'tania_tags';
     static COL_IMG_ID = 'image_id';
     static COL_TAG_NAME = 'tag_name';
 
