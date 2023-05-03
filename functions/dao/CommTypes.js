@@ -1,6 +1,5 @@
-const Util = require('util');
 const knex = require('knex')({
-    client: require('knex-serverless-mysql'),
+    client: 'pg',
 });
 
 module.exports = class PortfolioTypes {
@@ -9,7 +8,7 @@ module.exports = class PortfolioTypes {
     static COL_OFFER = 'offer';
     static COL_EX_URL = 'example_url';
 
-    constructor(connSQL, type) {
+    constructor(pgClient, type) {
         if (type === 'base') {
             this._tableName = 'tania_comm_types';
         } else if (type === 'bg') {
@@ -18,23 +17,22 @@ module.exports = class PortfolioTypes {
             throw new Error('Invalid or missing type');
         }
 
-        this._connSQL = connSQL;
-        this._connSQL.query = Util.promisify(this._connSQL.query);
+        this._pgClient = pgClient;
     }
 
     async getAll() {
-        const arrRows = await this._connSQL.query(
+        const arrRows = (await this._pgClient.query(
             knex(this._tableName)
                 .select()
                 .orderBy(PortfolioTypes.COL_PRICE, 'asc')
                 .toString(),
-        );
+        )).rows;
 
         return arrRows;
     }
 
     async create(display, price, offer, example_url) {
-        await this._connSQL.query(
+        await this._pgClient.query(
             knex(this._tableName)
                 .insert({
                     [PortfolioTypes.COL_DISPLAY]: display,
@@ -47,7 +45,7 @@ module.exports = class PortfolioTypes {
     }
 
     async delete(display) {
-        await this._connSQL.query(
+        await this._pgClient.query(
             knex(this._tableName)
                 .del()
                 .where(PortfolioTypes.COL_DISPLAY, decodeURIComponent(display))
@@ -82,11 +80,7 @@ module.exports = class PortfolioTypes {
         console.log({objUpdate});
 
         if (Object.keys(objUpdate).length) {
-            console.log(knex(this._tableName)
-                .update(objUpdate)
-                .where(PortfolioTypes.COL_DISPLAY, displayBefore)
-                .toString());
-            await this._connSQL.query(
+            await this._pgClient.query(
                 knex(this._tableName)
                     .update(objUpdate)
                     .where(PortfolioTypes.COL_DISPLAY, displayBefore)

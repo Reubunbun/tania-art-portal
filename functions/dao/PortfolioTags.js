@@ -1,6 +1,5 @@
-const Util = require('util');
 const knex = require('knex')({
-    client: require('knex-serverless-mysql'),
+    client: 'pg',
 });
 
 module.exports = class PortfolioTags {
@@ -8,17 +7,16 @@ module.exports = class PortfolioTags {
     static COL_IMG_ID = 'image_id';
     static COL_TAG_NAME = 'tag_name';
 
-    constructor(connSQL) {
-        this._connSQL = connSQL;
-        this._connSQL.query = Util.promisify(this._connSQL.query);
+    constructor(pgClient) {
+        this._pgClient = pgClient;
     }
 
     async getAllTags() {
-        const arrRows = await this._connSQL.query(
+        const arrRows = (await this._pgClient.query(
             knex(PortfolioTags.TABLE_NAME)
                 .distinct(PortfolioTags.COL_TAG_NAME)
                 .toString(),
-        );
+        )).rows;
 
         return arrRows.map(objRow => objRow[PortfolioTags.COL_TAG_NAME]);
     }
@@ -33,7 +31,7 @@ module.exports = class PortfolioTags {
             [PortfolioTags.COL_TAG_NAME]: strTag,
         }));
 
-        await this._connSQL.query(
+        await this._pgClient.query(
             knex(PortfolioTags.TABLE_NAME)
                 .insert(arrInserts)
                 .toString(),
@@ -41,7 +39,7 @@ module.exports = class PortfolioTags {
     }
 
     async updateTags(intImgId, arrTags) {
-        await this._connSQL.query(
+        await this._pgClient.query(
             knex(PortfolioTags.TABLE_NAME)
                 .where(PortfolioTags.COL_IMG_ID, intImgId)
                 .del()

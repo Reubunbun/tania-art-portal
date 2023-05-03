@@ -1,6 +1,5 @@
-const Util = require('util');
 const knex = require('knex')({
-    client: require('knex-serverless-mysql'),
+    client: 'pg',
 });
 const DaoPortfolioTags = require('./PortfolioTags.js');
 
@@ -18,13 +17,12 @@ module.exports = class PortfolioImages {
 
     static IMAGES_GET_LIMIT = 200;
 
-    constructor(connSQL) {
-        this._connSQL = connSQL;
-        this._connSQL.query = Util.promisify(this._connSQL.query);
+    constructor(pgClient) {
+        this._pgClient = pgClient;
     }
 
     async getAll() {
-        const arrRows = await this._connSQL.query(
+        const arrRows = (await this._pgClient.query(
             knex(PortfolioImages.TABLE_NAME)
                 .select(
                     knex.raw(`${PortfolioImages.TABLE_NAME}.*, ${DaoPortfolioTags.TABLE_NAME}.${DaoPortfolioTags.COL_TAG_NAME}`),
@@ -35,7 +33,7 @@ module.exports = class PortfolioImages {
                     `${DaoPortfolioTags.TABLE_NAME}.${DaoPortfolioTags.COL_IMG_ID}`,
                 )
                 .toString(),
-        );
+        )).rows;
 
         if (!arrRows.length) {
             return [];
@@ -97,7 +95,7 @@ module.exports = class PortfolioImages {
 
         let intNewPrio = 1;
 
-        const arrResults = await this._connSQL.query(strGetLastPrio);
+        const arrResults = (await this._pgClient.query(strGetLastPrio)).rows;
         if (arrResults && arrResults.length) {
             const intLastPrio = arrResults[0][`max(\`${PortfolioImages.COL_PRIO}\`)`];
 
@@ -110,14 +108,15 @@ module.exports = class PortfolioImages {
 
         objInsert[PortfolioImages.COL_PRIO] = intNewPrio;
 
-        const objInsertResult =  await this._connSQL.query(
+        const objInsertResult = await this._pgClient.query(
             knex(PortfolioImages.TABLE_NAME)
-                .insert(objInsert)
+                .insert(objInsert, PortfolioImages.COL_IMAGE_ID)
                 .toString()
         );
+        console.log('NEWLY INSERTED ID = ',objInsertResult.rows[0][PortfolioImages.COL_IMAGE_ID]);
         return {
             Prio: intNewPrio,
-            Id: objInsertResult.insertId,
+            Id: objInsertResult.rows[0][PortfolioImages.COL_IMAGE_ID],
         };
     }
 
@@ -142,12 +141,12 @@ module.exports = class PortfolioImages {
                 .where(PortfolioImages.COL_IMAGE_ID, intId)
                 .toString();
 
-            await this._connSQL.query(strUpdate);
+            await this._pgClient.query(strUpdate);
         }
     }
 
     async delete(intId) {
-        await this._connSQL.query(
+        await this._pgClient.query(
             knex(PortfolioImages.TABLE_NAME)
                 .del()
                 .where(PortfolioImages.COL_IMAGE_ID, intId)

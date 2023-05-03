@@ -1,4 +1,4 @@
-const sql = require('mysql');
+const { Client } = require('pg');
 const auth = require('./service/auth.js');
 const DaoPortfolioImages = require('./dao/PortfolioImages.js');
 const DaoPortfolioTags = require('./dao/PortfolioTags.js');
@@ -12,15 +12,17 @@ module.exports.handler = async function(objRequest) {
         return Response;
     }
 
-    const connSQL = sql.createConnection({
-        host: process.env.DB_HOST,
+    const client = new Client({
         user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
+        host: process.env.DB_HOST,
         database: process.env.DB_NAME,
-        port: process.env.DB_PORT,
+        password: process.env.DB_PASSWORD,
+        port: 5432,
+        ssl: {rejectUnauthorized: false },
     });
-    const daoPortfolioImages = new DaoPortfolioImages(connSQL);
-    const daoPortfolioTags = new DaoPortfolioTags(connSQL);
+    await client.connect();
+    const daoPortfolioImages = new DaoPortfolioImages(client);
+    const daoPortfolioTags = new DaoPortfolioTags(client);
 
     try {
         switch (objRequest.httpMethod) {
@@ -55,7 +57,7 @@ module.exports.handler = async function(objRequest) {
         }
     } catch (err) {
     } finally {
-        connSQL.destroy();
+        await client.end();
     }
 };
 
