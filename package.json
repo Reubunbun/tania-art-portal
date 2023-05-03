@@ -11,13 +11,11 @@
     "framer-motion": "^6.2.8",
     "jsonwebtoken": "^8.5.1",
     "knex": "^1.0.4",
-    "knex-serverless-mysql": "^1.1.0",
-    "mysql": "^2.18.1",
+    "pg": "^8.10.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^5.0.0",
     "react-scripts": "5.0.0",
-    "util": "^0.12.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
