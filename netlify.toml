@@ -10,3 +10,6 @@
     from = "/*"
     to = "/"
     status = 200
+
+[build.environment]
+NETLIFY_DEV_ALLOW_EXTERNAL = "pg-query-stream sqlite3"
