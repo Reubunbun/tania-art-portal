@@ -1,5 +1,4 @@
 [build]
-    command = "sudo apt-get update && sudo apt-get install -y libpq-dev && npm install && npm build"
     functions = "functions"
 
 [[redirects]]
