@@ -40,8 +40,8 @@ export default function CreateImage({
                 Description: strDescription,
                 Tags: strTags,
                 URL: strUrl,
-                Width: this.width,
-                Height: this.height,
+                Width: img.width,
+                Height: img.height,
               },
             })
               .then(({data}) => callbackAddImage({

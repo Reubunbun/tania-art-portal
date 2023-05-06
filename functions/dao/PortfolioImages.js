@@ -90,14 +90,14 @@ module.exports = class PortfolioImages {
         };
 
         const strGetLastPrio = knex(PortfolioImages.TABLE_NAME)
-            .max(PortfolioImages.COL_PRIO)
+            .max(PortfolioImages.COL_PRIO, { as: 'max_prio' })
             .toString();
 
         let intNewPrio = 1;
 
         const arrResults = (await this._pgClient.query(strGetLastPrio)).rows;
         if (arrResults && arrResults.length) {
-            const intLastPrio = arrResults[0][`max(\`${PortfolioImages.COL_PRIO}\`)`];
+            const intLastPrio = arrResults[0]['max_prio'];
 
             if (intLastPrio === null) {
                 intNewPrio = 1;

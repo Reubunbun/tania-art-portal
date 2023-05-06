@@ -41,7 +41,7 @@ export default function CommissionItem({ item, callbackUpdate, callbackDelete })
       bFoundChange = true;
     }
 
-    if (item.price !== strOffer) {
+    if (item.price !== strPrice) {
       objNewOption.offer = intOffer;
       bFoundChange = true;
     }
