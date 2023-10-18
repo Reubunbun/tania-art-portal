@@ -3,12 +3,14 @@ import cookie from 'cookie';
 import Login from './Routes/Login/Login.jsx';
 import EditWork from './Routes/EditWork/EditWork.jsx';
 import EditCommissionOptions from './Routes/EditCommissionOptions/EditCommissionOptions.jsx';
+import EditStock from './Routes/EditStock/EditStock.jsx';
 import Authorize from './Components/Authorize/Authorize.jsx';
 import './App.css';
 
 const c_arrAuthorizedPaths = [
   '/editwork',
-  '/editcommissionoptions'
+  '/editcommissionoptions',
+  '/editstock',
 ];
 
 function App() {
@@ -33,6 +35,11 @@ function App() {
       <Route path='/editcommissionoptions'>
         <Authorize>
           <EditCommissionOptions />
+        </Authorize>
+      </Route>
+      <Route path='/editstock'>
+        <Authorize>
+          <EditStock />
         </Authorize>
       </Route>
       <Route path='/login'>

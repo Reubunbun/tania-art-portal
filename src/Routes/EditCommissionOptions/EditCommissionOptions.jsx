@@ -34,7 +34,15 @@ export default function EditCommissionOptions() {
   return (
     <div className='page-container'>
       <h1>Make Changes To Commission Options</h1>
-      <Link to='/editwork'>Go To Gallery Options</Link>
+      <div
+        style={{
+          display: 'flex',
+          gap: '20px'
+        }}
+      >
+        <Link to='/editwork'>Go To Gallery Options</Link>
+        <Link to='/editstock'>Edit Shop Stock</Link>
+      </div>
       <div>
         <button
           className='btn-modal'

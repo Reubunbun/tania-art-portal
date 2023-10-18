@@ -90,7 +90,15 @@ export default function EditWork() {
   return (
     <div className='page-container'>
       <h1>Make Changes To Tania Art Site</h1>
-      <Link to='/editcommissionoptions'>Go To Commission Options</Link>
+      <div
+        style={{
+          display: 'flex',
+          gap: '20px'
+        }}
+      >
+        <Link to='/editcommissionoptions'>Go To Commission Options</Link>
+        <Link to='/editstock'>Edit Shop Stock</Link>
+      </div>
       <div>
         <button
           className='btn-modal'
