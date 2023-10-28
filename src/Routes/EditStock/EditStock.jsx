@@ -51,6 +51,7 @@ export default function EditStock() {
 
   return (
     <div className='page-container'>
+      <h1>Edit Shop Stock</h1>
       <div
         style={{
           display: 'flex',
